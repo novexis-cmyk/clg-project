@@ -1,0 +1,367 @@
+<?php
+session_start();
+// Database connection
+$conn = mysqli_connect("localhost", "root", "", "project") or die("Connection failed: " . mysqli_connect_error());
+
+// Initialize cart if not exists
+if(!isset($_SESSION['cart'])) {
+    $_SESSION['cart'] = array();
+}
+
+// Handle add to cart
+if(isset($_POST['add_to_cart'])) {
+    // Check if user is logged in before adding to cart
+    if(!isset($_SESSION['user_id'])) {
+        header("Location: login/login.html");
+        exit();
+    }
+    
+    $product_id = $_POST['product_id'];
+    if(!in_array($product_id, $_SESSION['cart'])) {
+        $_SESSION['cart'][] = $product_id;
+    }
+    // Redirect to prevent form resubmission
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit();
+}
+
+// Handle logout
+if(isset($_GET['logout'])) {
+    session_destroy();
+    header("Location: login/login.html");
+    exit();
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Fruits SELLING SYSTEM</title>
+        <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(to bottom, #f4f7f0,#f6f8f2);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ---------- HEADER ---------- */
+        header {
+            background: #dfe6d3;
+            padding: 15px 50px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+        }
+
+        .h1r {
+            margin-left: auto;
+            display: flex;
+            gap: 30px;
+        }
+
+        .h1r a {
+            text-decoration: none;
+            color: #2f3d1f;
+            font-weight: 600;
+        }
+
+        .h2r {
+            margin-right: auto;
+            display: flex;
+            gap: 30px;
+        }
+
+        .h2r h1 {
+            text-decoration: none;
+            color: #2f3d1f;
+            font-weight: 600;
+        }
+
+        /* Dropdown Styles */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            z-index: 1;
+            top: 100%;
+            left: 0;
+            border-radius: 5px;
+        }
+
+        .dropdown-content a {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .cart-icon {
+            position: relative;
+        }
+
+        .cart-count {
+            background-color: #FF6B35;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+            position: absolute;
+            top: -8px;
+            right: -8px;
+        }
+
+        .cart-icon-symbol {
+            font-size: 18px;
+        }
+
+        .search-icon {
+            font-size: 18px;
+        }
+
+        .check-icon {
+            color: #9bbf59;
+            margin-right: 5px;
+            font-weight: bold;
+        }
+
+        /* Main Content Styles */
+        main {
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .products-title {
+            text-align: center;
+            font-size: 36px;
+            font-weight: bold;
+            color: #2f3d1f;
+            margin-bottom: 40px;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            justify-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Product Card Styles */
+        .product-card {
+            background: #ffffffd9;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+            transition: transform 0.3s, box-shadow 0.3s;
+            width: 280px;
+        }
+
+        .product-card:hover {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .product-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2f3d1f;
+            margin-bottom: 10px;
+        }
+
+        .product-price {
+            font-size: 18px;
+            font-weight: bold;
+            color: #9bbf59;
+            margin-bottom: 8px;
+        }
+
+        .product-stock {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .product-stock i {
+            color: #2ECC71;
+            margin-right: 5px;
+        }
+
+        .buy-btn {
+            background: linear-gradient(to right, #f7b733, #fc4a1a);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+        }
+
+        .buy-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* Footer Styles */
+        footer {
+            background: #c1c9b4;
+            padding: 20px;
+            text-align: center;
+            margin-top: 50px;
+            font-size: 13px;
+        }
+
+        .footer-links {
+            color: #2f3d1f;
+        }
+
+        .footer-links a {
+            color: #2f3d1f;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #9bbf59;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .logo-text {
+                font-size: 20px;
+            }
+            
+            nav ul {
+                gap: 20px;
+            }
+            
+            .products-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 20px;
+            }
+            
+            .product-card {
+                width: 250px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .product-card {
+                width: 100%;
+                max-width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="h2r">
+            <h1>Appna Fruit</h1>
+        </div>
+        <div class="h1r">
+            <a href="index.php">Home</a>
+            <a href="cart/cart_simple.php">Cart (<?php echo count($_SESSION['cart']); ?>)</a>
+            <?php if(isset($_SESSION['user_id'])): ?>
+                <a href="?logout=1">Logout</a>
+            <?php else: ?>
+                <a href="login/login.html">Login</a>
+            <?php endif; ?>
+        </div>
+    </header>
+
+    <main>
+        <h1 class="products-title">Products</h1>
+        <div class="products-grid">
+            <?php
+            // Fetch products from products table
+            $query = "SELECT * FROM products ORDER BY product_name";
+            $result = mysqli_query($conn, $query);
+            
+            if(mysqli_num_rows($result) > 0) {
+                while($row = mysqli_fetch_assoc($result)) {
+                    // Get stock quantity for this product
+                    $stock_query = "SELECT quantity FROM stock WHERE product_id = " . $row['product_id'];
+                    $stock_result = mysqli_query($conn, $stock_query);
+                    $stock_data = mysqli_fetch_assoc($stock_result);
+                    $stock_quantity = $stock_data ? $stock_data['quantity'] : 0;
+                    
+                    echo '<div class="product-card">';
+                    echo '<h3 class="product-name">' . htmlspecialchars($row['product_name']) . '</h3>';
+                    echo '<p class="product-price">₹' . htmlspecialchars($row['price']) . '</p>';
+                    
+                    // Show stock based on actual quantity
+                    if($stock_quantity > 0) {
+                        echo '<p class="product-stock"><span class="check-icon">✓</span> Stock: ' . $stock_quantity . ' available</p>';
+                    } else {
+                        echo '<p class="product-stock" style="color: #dc3545;"><span class="check-icon" style="color: #dc3545;">✗</span> Out of Stock</p>';
+                    }
+                    
+                    echo '<form method="post" style="margin: 0;">';
+                    echo '<input type="hidden" name="product_id" value="' . htmlspecialchars($row['product_id']) . '">';
+                    echo '<input type="hidden" name="add_to_cart" value="1">';
+                    
+                    // Disable button if out of stock
+                    if($stock_quantity > 0) {
+                        echo '<button type="submit" class="buy-btn">Buy Now</button>';
+                    } else {
+                        echo '<button type="submit" class="buy-btn" disabled style="background: #6c757d; cursor: not-allowed;">Out of Stock</button>';
+                    }
+                    
+                    echo '</form>';
+                    echo '</div>';
+                }
+            } else {
+                echo '<p>No products found.</p>';
+            }
+            ?>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#">About Us</a> | <a href="#">Contact</a> | <a href="#">Privacy Policy</a>
+        </div>
+    </footer>
+</body>
+</html>
+
+<?php
+// Close database connection
+mysqli_close($conn);
+?>

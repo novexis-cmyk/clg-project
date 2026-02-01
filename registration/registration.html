@@ -1,0 +1,235 @@
+<html>
+    <head>
+        <title>Registration Page</title>
+        <script>
+            function fun1()
+            {
+                var a=document.frm.password.value;
+                var b=document.frm.Cpassword.value;
+                if(a!=b)
+                {
+                    alert("password not match try again");
+                    return false;
+                }
+            }
+        </script>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: "Segoe UI", Arial, sans-serif;
+                }
+                
+/* ---------- BODY ---------- */
+body {
+    min-height: 109vh;
+    background: linear-gradient(to bottom, #f4f7f0,#f6f8f2);
+    display: flex;
+    flex-direction: column;
+}
+
+/* ---------- HEADER ---------- */
+header {
+    background:  #dfe6d3;
+    padding: 15px 50px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+}
+
+.h1r {
+    margin-left: auto;
+    display: flex;
+    gap: 30px;
+}
+
+.h1r a {
+    text-decoration: none;
+    color: #2f3d1f;
+    font-weight: 600;
+}
+.h2r{
+    margin-right: auto;
+    display: flex;
+    gap: 30px;
+}
+.h2r h1 {
+    text-decoration: none;
+    color: #2f3d1f;
+    font-weight: 600;
+}
+/* ---------- MAIN CARD ---------- */
+.page-center{
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.main {
+    min-height: 45px;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.m {
+    min-height: 55px;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main2 {
+    display: flex;
+    justify-content: center;
+    width: 380px;
+    background: #ffffffd9;
+    padding: 30px 35px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+    text-align: center;
+    align-content: center;
+}
+
+/* ---------- HEADINGS ---------- */
+.main2 h1 {
+    font-size: 30px;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.main2 p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 25px;
+}
+
+/* ---------- FORM ---------- */
+form {
+    text-align: left;
+}
+
+form label {
+    font-weight: 600;
+    font-size: 14px;
+    display: block;
+    margin-top: 12px;
+    margin-bottom: 5px;
+    color: #333;
+    text-shadow: 0 10px 25px rgba(0,0,0,0.12);
+}
+
+form input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    outline: none;
+    font-size: 14px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+}
+
+form input:focus {
+    border-color: #9bbf59;
+}
+
+/* ---------- BUTTON ---------- */
+input[type="submit"] {
+    margin-top: 20px;
+    width: 100%;
+    background: linear-gradient(to right, #f7b733, #fc4a1a);
+    border: none;
+    color: white;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+}
+
+input[type="submit"]:hover {
+    opacity: 0.9;
+}
+
+/* ---------- LOGIN LINK ---------- */
+form a {
+    text-decoration: none;
+    font-weight: 600;
+    color: #fc4a1a;
+}
+
+form a:hover {
+    text-decoration: underline;
+}
+
+/* ---------- FOOTER ---------- */
+footer {
+    text-align: center;
+    margin-top: 50px;
+    padding: 20px;
+    background: #c1c9b4;
+    font-size: 13px;
+}
+
+.footer-links {
+    color: #2f3d1f;
+}
+
+.footer-links a {
+    color: #2f3d1f;
+    text-decoration: none;
+    margin: 0 10px;
+    transition: color 0.3s;
+}
+
+.footer-links a:hover {
+    color: #9bbf59;
+}
+        </style>
+    </head>
+    <body>
+        <header>
+            <div class="h2r">
+                <h1>Appna Fruit</h1>
+            </div>
+            <div class="h1r">
+                <a href="../index.php">Home</a>
+                <a href="registration.html">Registration</a>
+            </div>
+        </header>
+        <br>
+        <div class="main">
+            <h1>Registration</h1>
+        </div>
+        <div class="m">
+            Create a new account
+        </div>
+        <div class="page-center">
+        <div class="main2">
+            <form name="frm" method="post" action="registration.php" onsubmit="return fun1()">
+            Name:<br>
+            <input type="text" name="name" required placeholder="Name"><br>
+            Email:<br>
+            <input type="email" name="email" required placeholder="Email"><br>
+            password:<br>
+            <input type="password" name="password" required placeholder="Password"><br>
+            Comform password:<br>
+            <input type="password" name="Cpassword" required placeholder="Conform Password"><br>
+            phone:<br>
+            <input type="tel" maxlength="10" name="phone" required placeholder="Phone"><br>
+            <input type="submit" value="Register" name="btn1"><br>
+            Already have an account?<a href="login.html">Login here</a>
+            </form>
+        </div>
+        </div>
+        <footer>
+            <div class="footer-links">
+                <a href="#">About Us</a> | <a href="#">Contact</a> | <a href="#">Privacy Policy</a>
+            </div>
+        </footer>
+    </body>
+</html>
